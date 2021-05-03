@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:time_tracker_flutter_course/app/common_widgets/form_submit_button.dart';
+import 'package:time_tracker_flutter_course/app/common_widgets/show_alert_dialog.dart';
 import 'package:time_tracker_flutter_course/app/sign_in/validators.dart';
 import 'package:time_tracker_flutter_course/services/auth.dart';
 
@@ -40,7 +43,12 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       }
       Navigator.of(context).pop();
     } catch (e) {
-      print(e);
+      showAlertDialog(
+        context,
+        title: 'Sign In failed',
+        content: e.toString(),
+        defaultActionText: 'OK',
+      );
     } finally {
       setState(() {
         _isLoading = false;
@@ -73,9 +81,9 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       _formType = _formType == EmailSignInFormType.signIn
           ? EmailSignInFormType.register
           : EmailSignInFormType.signIn;
-      _emailController.clear();
-      _passwordController.clear();
     });
+    _emailController.clear();
+    _passwordController.clear();
   }
 
   List<Widget> _buildChildren() {
@@ -101,7 +109,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       ),
       const SizedBox(height: 8.0),
       TextButton(
-        onPressed: () => !_isLoading ? _toggleFormType : null,
+        onPressed: () => !_isLoading ? _toggleFormType() : null,
         child: Text(secondaryText),
       )
     ];
