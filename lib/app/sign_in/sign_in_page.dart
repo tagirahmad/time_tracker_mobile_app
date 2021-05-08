@@ -7,7 +7,14 @@ import 'package:time_tracker_flutter_course/app/sign_in/sign_in_button.dart';
 import 'package:time_tracker_flutter_course/app/sign_in/social_sign_in_button.dart';
 import 'package:time_tracker_flutter_course/services/auth.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
+  @override
+  _SignInPageState createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  bool _isLoading = false;
+
   void _showSignInError(
     BuildContext context,
     Exception exception,
@@ -24,28 +31,37 @@ class SignInPage extends StatelessWidget {
 
   Future<void> _singInAnonymously(BuildContext context) async {
     try {
+      setState(() => _isLoading = true);
       final auth = Provider.of<AuthBase>(context, listen: false);
       await auth.signInAnonymously();
     } on Exception catch (e) {
       _showSignInError(context, e);
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
   Future<void> _singInWithGoogle(BuildContext context) async {
     try {
+      setState(() => _isLoading = true);
       final auth = Provider.of<AuthBase>(context, listen: false);
       await auth.signInWithGoogle();
     } on Exception catch (e) {
       _showSignInError(context, e);
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
   Future<void> _singInWithFacebook(BuildContext context) async {
     try {
+      setState(() => _isLoading = true);
       final auth = Provider.of<AuthBase>(context, listen: false);
       await auth.signInWithFacebook();
     } on Exception catch (e) {
       _showSignInError(context, e);
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -75,13 +91,9 @@ class SignInPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              'Sign In',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 32.0,
-                fontWeight: FontWeight.w600,
-              ),
+            SizedBox(
+              height: 50.0,
+              child: _buildHeader(),
             ),
             SizedBox(height: 48.0),
             SocialSignInButton(
@@ -89,7 +101,7 @@ class SignInPage extends StatelessWidget {
               assetName: 'images/google-logo.png',
               textColor: Colors.black87,
               color: Colors.white,
-              onPressed: () => _singInWithGoogle(context),
+              onPressed: _isLoading ? null : () => _singInWithGoogle(context),
             ),
             SizedBox(height: 8.0),
             SocialSignInButton(
@@ -97,14 +109,14 @@ class SignInPage extends StatelessWidget {
               assetName: 'images/facebook-logo.png',
               textColor: Colors.white,
               color: Colors.blue[900],
-              onPressed: () => _singInWithFacebook(context),
+              onPressed: _isLoading ? null : () => _singInWithFacebook(context),
             ),
             SizedBox(height: 8.0),
             SignInButton(
               text: 'Sign In with email',
               textColor: Colors.white,
               color: Colors.teal[700],
-              onPressed: () => _signInWithEmail(context),
+              onPressed: _isLoading ? null : () => _signInWithEmail(context),
             ),
             SizedBox(height: 8.0),
             Text(
@@ -117,10 +129,26 @@ class SignInPage extends StatelessWidget {
               text: 'Go anonymous',
               textColor: Colors.black,
               color: Colors.lime[300],
-              onPressed: () => _singInAnonymously(context),
+              onPressed: _isLoading ? null : () => _singInAnonymously(context),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    if (_isLoading) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    return Text(
+      'Sign In',
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontSize: 32.0,
+        fontWeight: FontWeight.w600,
       ),
     );
   }
