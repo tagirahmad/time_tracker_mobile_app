@@ -6,14 +6,16 @@ import 'package:time_tracker_flutter_course/app/common_widgets/show_exeption_ale
 import 'package:time_tracker_flutter_course/app/sign_in/validators.dart';
 import 'package:time_tracker_flutter_course/services/auth.dart';
 
-enum EmailSignInFormType { signIn, register }
+import 'email_sign_in_model.dart';
 
-class EmailSignInForm extends StatefulWidget with EmailAndPasswordValidators {
+class EmailSignInFormStateful extends StatefulWidget
+    with EmailAndPasswordValidators {
   @override
-  _EmailSignInFormState createState() => _EmailSignInFormState();
+  _EmailSignInFormStatefulState createState() =>
+      _EmailSignInFormStatefulState();
 }
 
-class _EmailSignInFormState extends State<EmailSignInForm> {
+class _EmailSignInFormStatefulState extends State<EmailSignInFormStateful> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
@@ -50,7 +52,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       }
       Navigator.of(context).pop();
     } on FirebaseAuthException catch (e) {
-      showExeptionAlertDialog(
+      await showExeptionAlertDialog(
         context,
         title: 'Sign In failed',
         exception: e,
@@ -101,7 +103,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         ? 'Not registered? Create an account'
         : 'Have an account? Sign in';
 
-    bool submitEnabled = widget.emailValidator.isValid(_email) &&
+    var submitEnabled = widget.emailValidator.isValid(_email) &&
         widget.passwordValidator.isValid(_password);
 
     return [
@@ -122,7 +124,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   }
 
   TextField _buildPasswordTextField() {
-    bool showErrorText = _submitted &&
+    var showErrorText = _submitted &&
         !widget.passwordValidator.isValid(_password) &&
         !_isLoading;
 
@@ -143,7 +145,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   }
 
   TextField _buildEmailTextField() {
-    bool showErrorText = _submitted && !widget.emailValidator.isValid(_email);
+    var showErrorText = _submitted && !widget.emailValidator.isValid(_email);
 
     return TextField(
       autocorrect: false,

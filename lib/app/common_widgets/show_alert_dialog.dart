@@ -19,12 +19,12 @@ Future<dynamic> showAlertDialog(
         actions: [
           if (cancelActionText != null)
             TextButton(
-              child: Text(cancelActionText),
               onPressed: () => Navigator.of(context).pop(false),
+              child: Text(cancelActionText),
             ),
           TextButton(
-            child: Text(defaultActionText),
             onPressed: () => Navigator.of(context).pop(true),
+            child: Text(defaultActionText),
           )
         ],
       ),
@@ -38,12 +38,12 @@ Future<dynamic> showAlertDialog(
         actions: [
           if (cancelActionText != null)
             CupertinoDialogAction(
-              child: Text(cancelActionText),
               onPressed: () => Navigator.of(context).pop(false),
+              child: Text(cancelActionText),
             ),
           CupertinoDialogAction(
-            child: Text(defaultActionText),
             onPressed: () => Navigator.of(context).pop(true),
+            child: Text(defaultActionText),
           )
         ],
       ),
