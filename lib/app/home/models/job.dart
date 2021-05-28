@@ -1,8 +1,9 @@
 class Job {
-  Job({required this.name, required this.ratePerHour});
+  Job({required this.id, required this.name, required this.ratePerHour});
 
+  final String id;
   final String name;
-  final String ratePerHour;
+  final int ratePerHour;
 
   Map<String, dynamic> toMap() {
     return {
@@ -11,8 +12,10 @@ class Job {
     };
   }
 
-  factory Job.fromMap(Map<String, dynamic> map) {
+  factory Job.fromMap(Map<String, dynamic> map, String documentId) {
+    print(map['ratePerHour'].runtimeType);
     return Job(
+      id: documentId,
       name: map['name'],
       ratePerHour: map['ratePerHour'],
     );
